@@ -4,7 +4,7 @@ export async function POST(req: NextRequest) {
     try {
         const body = await req.json();
 
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE}/admin/signup`, {
+        const res = await fetch(`${process.env.API_BASE}/admin/signup`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(body),

@@ -3,63 +3,105 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { logoutApi } from '@/lib/api';
+import {
+    MdDashboard, MdCategory, MdHub, MdSettings,
+    MdLogout, MdPerson, MdVisibility, MdPeople,
+} from 'react-icons/md';
 
 const navItems = [
-    { href: '/overview',    label: 'Overview',   icon: '▦' },
-    { href: '/categories',  label: 'Categories', icon: '❏' },
+    { href: '/overview',   label: 'Dashboard',  icon: MdDashboard },
+    { href: '/categories', label: 'Categories', icon: MdCategory },
+    { href: '/hubs',       label: 'Hubs',       icon: MdHub },
+    { href: '/customers',  label: 'Customers',  icon: MdPeople },
+    { href: '/settings',   label: 'Settings',   icon: MdSettings },
 ];
 
-export default function Sidebar({ adminName }: { adminName: string }) {
+interface SidebarProps {
+    adminName: string;
+    isGuest?: boolean;
+}
+
+export default function Sidebar({ adminName, isGuest = false }: SidebarProps) {
     const pathname = usePathname();
-    const router = useRouter();
+    const router   = useRouter();
 
     const handleLogout = async () => {
-        await logoutApi();
+        if (isGuest) {
+            await fetch('/api/auth/guest-logout', { method: 'POST' });
+        } else {
+            await logoutApi();
+        }
         router.push('/login');
     };
 
     return (
-        <aside className="w-56 shrink-0 border-r border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 flex flex-col h-screen sticky top-0">
+        <aside className="w-60 shrink-0 bg-[#1a2e1a] flex flex-col h-screen sticky top-0">
             {/* Brand */}
-            <div className="flex items-center gap-2.5 px-5 py-5 border-b border-zinc-200 dark:border-zinc-800">
-                <div className="w-8 h-8 rounded-lg bg-violet-600 flex items-center justify-center text-white text-sm font-bold shrink-0">A</div>
-                <span className="text-sm font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">Admin Panel</span>
+            <div className="flex items-center gap-3 px-6 py-6">
+                <div className="w-9 h-9 rounded-xl bg-[#2d5a2d] flex items-center justify-center shrink-0">
+                    <MdDashboard className="text-[#4ade80] text-xl" />
+                </div>
+                <span className="text-white font-bold text-lg tracking-tight">AdminPanel</span>
             </div>
 
+            {/* Section label */}
+            <p className="px-6 text-[10px] font-semibold uppercase tracking-widest text-[#4a7a4a] mb-2">Menu</p>
+
             {/* Nav */}
-            <nav className="flex-1 flex flex-col gap-0.5 p-3">
-                {navItems.map(item => {
-                    const active = pathname.startsWith(item.href);
+            <nav className="flex flex-col gap-1 px-3">
+                {navItems.map(({ href, label, icon: Icon }) => {
+                    const active = pathname.startsWith(href);
                     return (
                         <Link
-                            key={item.href}
-                            href={item.href}
-                            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                            key={href}
+                            href={href}
+                            className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all
                                 ${active
-                                    ? 'bg-violet-50 dark:bg-violet-950/40 text-violet-700 dark:text-violet-400'
-                                    : 'text-zinc-600 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-800 hover:text-zinc-900 dark:hover:text-zinc-100'
+                                    ? 'bg-[#2d5a2d] text-white'
+                                    : 'text-[#8aab8a] hover:bg-[#243824] hover:text-white'
                                 }`}
                         >
-                            <span className="text-base w-5 text-center">{item.icon}</span>
-                            {item.label}
+                            <Icon className={`text-lg shrink-0 ${active ? 'text-[#4ade80]' : ''}`} />
+                            {label}
                         </Link>
                     );
                 })}
             </nav>
 
-            {/* Bottom */}
-            <div className="border-t border-zinc-200 dark:border-zinc-800 p-3 flex flex-col gap-2">
-                <div className="flex items-center gap-2.5 px-2 py-1.5">
-                    <div className="w-7 h-7 rounded-full bg-violet-100 dark:bg-violet-900 flex items-center justify-center text-violet-700 dark:text-violet-300 text-xs font-bold shrink-0">
-                        {adminName?.[0]?.toUpperCase() ?? 'A'}
+            {/* General section */}
+            <p className="px-6 text-[10px] font-semibold uppercase tracking-widest text-[#4a7a4a] mt-6 mb-2">General</p>
+            <nav className="flex flex-col gap-1 px-3">
+                <Link
+                    href="/settings"
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8aab8a] hover:bg-[#243824] hover:text-white transition-all"
+                >
+                    <MdSettings className="text-lg shrink-0" />
+                    Settings
+                </Link>
+            </nav>
+
+            <div className="flex-1" />
+
+            {/* User + Logout */}
+            <div className="px-3 pb-5 flex flex-col gap-1">
+                <div className={`flex items-center gap-3 px-4 py-2.5 rounded-xl ${isGuest ? 'bg-amber-900/30' : 'bg-[#243824]'}`}>
+                    <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${isGuest ? 'bg-amber-800/40' : 'bg-[#2d5a2d]'}`}>
+                        {isGuest
+                            ? <MdVisibility className="text-amber-400 text-base" />
+                            : <MdPerson className="text-[#4ade80] text-base" />
+                        }
                     </div>
-                    <span className="text-sm font-medium text-zinc-700 dark:text-zinc-300 truncate">{adminName}</span>
+                    <div className="min-w-0">
+                        <span className="text-sm font-medium text-white truncate block">{adminName}</span>
+                        {isGuest && <span className="text-[10px] text-amber-400 font-medium">View only</span>}
+                    </div>
                 </div>
                 <button
                     onClick={handleLogout}
-                    className="w-full text-left px-3 py-2 rounded-lg text-sm text-zinc-500 dark:text-zinc-400 hover:bg-red-50 dark:hover:bg-red-950/30 hover:text-red-600 dark:hover:text-red-400 transition-colors"
+                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8aab8a] hover:bg-red-900/30 hover:text-red-400 transition-all w-full text-left"
                 >
-                    Sign out
+                    <MdLogout className="text-lg shrink-0" />
+                    {isGuest ? 'Exit Guest' : 'Logout'}
                 </button>
             </div>
         </aside>

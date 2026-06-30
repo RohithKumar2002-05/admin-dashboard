@@ -53,3 +53,65 @@ export const createCategoryApi = (form: FormData) =>
         if (!res.ok) throw json;
         return json;
     });
+
+export const createSubCategoryApi = (categoryId: string, form: FormData) =>
+    fetch(`/api/categories/${categoryId}/subcategories`, {
+        method: 'POST',
+        body: form,
+    }).then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
+    });
+
+export const getHubsApi = () =>
+    fetch('/api/hubs').then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
+    });
+
+export const getHubByIdApi = (id: string) =>
+    fetch(`/api/hubs/${id}`).then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
+    });
+
+export const getRevenueApi = () =>
+    fetch('/api/revenue').then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
+    });
+
+export const getMeApi = () =>
+    fetch('/api/me').then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
+    });
+
+// ── Settings ────────────────────────────────────────────────────────────────
+const call = (url: string, init?: RequestInit) =>
+    fetch(url, init).then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
+    });
+
+// Roles
+export const getSettingsRolesApi = () => call('/api/settings/roles');
+export const createSettingsRoleApi = (data: { name: string; permissions: string[] }) =>
+    call('/api/settings/roles', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+export const deleteSettingsRoleApi = (roleId: string) =>
+    call(`/api/settings/roles/${roleId}`, { method: 'DELETE' });
+
+// Users
+export const getSettingsUsersApi = () => call('/api/settings/users');
+export const createSettingsUserApi = (data: object) =>
+    call('/api/settings/users', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(data) });
+export const deleteSettingsUserApi = (adminId: string) =>
+    call(`/api/settings/users/${adminId}`, { method: 'DELETE' });
+export const updateSettingsUserRoleApi = (adminId: string, role_name: string) =>
+    call(`/api/settings/users/${adminId}/role`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role_name }) });

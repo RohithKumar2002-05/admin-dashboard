@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 
-const BACKEND = process.env.NEXT_PUBLIC_API_BASE;
+const BACKEND = process.env.API_BASE;
 
 async function getToken() {
     const store = await cookies();
-    return store.get('admin_token')?.value ?? null;
+    const token     = store.get('admin_token')?.value;
+    const guestMode = store.get('guest_mode')?.value === 'true';
+    // For guests, use GUEST_TOKEN so read endpoints still return data
+    return token ?? (guestMode ? process.env.GUEST_TOKEN : null) ?? null;
 }
 
+// GET /api/categories — fetch all categories with sub_categories
 export async function GET() {
     const token = await getToken();
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -20,11 +24,13 @@ export async function GET() {
     return NextResponse.json(json, { status: res.status });
 }
 
+// POST /api/categories — create category (blocked for guests — no token)
 export async function POST(req: NextRequest) {
-    const token = await getToken();
-    if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    const store     = await cookies();
+    const token     = store.get('admin_token')?.value;
+    const guestMode = store.get('guest_mode')?.value === 'true';
+    if (!token || guestMode) return NextResponse.json({ error: 'Forbidden: guest users cannot make changes' }, { status: 403 });
 
-    // Forward FormData as-is to the backend
     const form = await req.formData();
     const res = await fetch(`${BACKEND}/admin/categories`, {
         method: 'POST',
