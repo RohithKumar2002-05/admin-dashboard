@@ -5,7 +5,7 @@ let socket: Socket | null = null;
 export const connectSocket = (token: string): Socket => {
     if (socket?.connected) return socket;
 
-    const BASE = process.env.NEXT_PUBLIC_API_BASE?.replace('/api', '') ?? '';
+    const BASE = process.env.NEXT_PUBLIC_SOCKET_URL ?? '';
 
     socket = io(BASE, {
         auth: { token },
