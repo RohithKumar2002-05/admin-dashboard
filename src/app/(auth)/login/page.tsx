@@ -98,10 +98,10 @@ export default function LoginPage() {
                         Guest access is read-only. No changes can be made.
                     </p>
 
-                    <p className="text-center text-sm text-gray-500">
+                    {/* <p className="text-center text-sm text-gray-500">
                         No account?{' '}
                         <Link href="/signup" className="text-[#166534] font-semibold hover:underline">Sign up</Link>
-                    </p>
+                    </p> */}
                 </div>
             </div>
         </div>

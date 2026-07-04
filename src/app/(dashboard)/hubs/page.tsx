@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import Link from 'next/link';
-import { MdLocationOn, MdPhone, MdCheckCircle, MdStore, MdArrowForward } from 'react-icons/md';
+import { MdLocationOn, MdPhone, MdCheckCircle, MdStore, MdArrowForward, MdAdd } from 'react-icons/md';
 
 interface HubAddress {
     id: string;
@@ -46,9 +46,17 @@ export default async function HubsPage() {
 
     return (
         <div>
-            <div className="mb-8">
-                <h1 className="text-3xl font-bold text-[#1a2e1a]">Hubs</h1>
-                <p className="text-sm text-gray-500 mt-1">{hubs.length} registered hub{hubs.length !== 1 ? 's' : ''}</p>
+            <div className="flex items-center justify-between mb-8">
+                <div>
+                    <h1 className="text-3xl font-bold text-[#1a2e1a]">Hubs</h1>
+                    <p className="text-sm text-gray-500 mt-1">{hubs.length} registered hub{hubs.length !== 1 ? 's' : ''}</p>
+                </div>
+                <Link
+                    href="/hubs/new"
+                    className="flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#166534] hover:bg-[#14532d] text-white text-sm font-semibold transition-colors"
+                >
+                    <MdAdd className="text-base" /> New Hub
+                </Link>
             </div>
 
             {hubs.length === 0 ? (
@@ -69,7 +77,7 @@ export default async function HubsPage() {
                             </tr>
                         </thead>
                         <tbody>
-                            {hubs.map((hub, i) => (
+                            {hubs.map((hub) => (
                                 <tr
                                     key={hub.id}
                                     className="border-b border-gray-100 last:border-0 hover:bg-[#f7fbf7] transition-colors"

@@ -78,6 +78,17 @@ export const getHubByIdApi = (id: string) =>
         return json;
     });
 
+export const createHubApi = (data: object) =>
+    fetch('/api/hubs', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    }).then(async res => {
+        const json = await res.json();
+        if (!res.ok) throw json;
+        return json;
+    });
+
 export const getRevenueApi = () =>
     fetch('/api/revenue').then(async res => {
         const json = await res.json();
