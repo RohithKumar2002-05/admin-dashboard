@@ -7,6 +7,7 @@ const geist = Geist({ subsets: ['latin'], variable: '--font-geist' });
 export const metadata: Metadata = {
     title: 'Admin Dashboard',
     description: 'Overall admin panel',
+    // icons: { icon: '/logo.png' },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
