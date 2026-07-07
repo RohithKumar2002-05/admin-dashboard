@@ -10,6 +10,15 @@ export const serverFetch = async (url: string, token: string) => {
     return res.json();
 };
 
+// ── Client-side 401 handler ──
+function handle401(res: Response) {
+    if (res.status === 401) {
+        document.cookie = 'admin_token=; Max-Age=0; path=/';
+        window.location.href = '/login';
+        throw new Error('Unauthorized');
+    }
+}
+
 // Auth — these call the Next.js route handlers, not the backend directly
 export const loginApi = (data: object) =>
     fetch('/api/auth/login', {
@@ -17,6 +26,7 @@ export const loginApi = (data: object) =>
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     }).then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -28,6 +38,7 @@ export const signupApi = (data: object) =>
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     }).then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -39,6 +50,7 @@ export const logoutApi = () =>
 // Categories — proxied through Next.js route handler so httpOnly token is attached server-side
 export const getCategoriesApi = () =>
     fetch('/api/categories').then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -49,6 +61,7 @@ export const createCategoryApi = (form: FormData) =>
         method: 'POST',
         body: form,
     }).then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -59,6 +72,7 @@ export const createSubCategoryApi = (categoryId: string, form: FormData) =>
         method: 'POST',
         body: form,
     }).then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -66,6 +80,7 @@ export const createSubCategoryApi = (categoryId: string, form: FormData) =>
 
 export const getHubsApi = () =>
     fetch('/api/hubs').then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -73,6 +88,7 @@ export const getHubsApi = () =>
 
 export const getHubByIdApi = (id: string) =>
     fetch(`/api/hubs/${id}`).then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -84,6 +100,7 @@ export const createHubApi = (data: object) =>
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
     }).then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -91,6 +108,7 @@ export const createHubApi = (data: object) =>
 
 export const getRevenueApi = () =>
     fetch('/api/revenue').then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -98,6 +116,7 @@ export const getRevenueApi = () =>
 
 export const getMeApi = () =>
     fetch('/api/me').then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
@@ -106,6 +125,7 @@ export const getMeApi = () =>
 // ── Settings ────────────────────────────────────────────────────────────────
 const call = (url: string, init?: RequestInit) =>
     fetch(url, init).then(async res => {
+        handle401(res);
         const json = await res.json();
         if (!res.ok) throw json;
         return json;
