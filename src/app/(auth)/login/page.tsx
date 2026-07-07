@@ -77,6 +77,9 @@ export default function LoginPage() {
                         >
                             {loading ? 'Signing in...' : 'Sign in'}
                         </button>
+                        <p className="text-center text-sm text-gray-500">
+                            <Link href="/reset-password" className="text-[#166534] font-semibold hover:underline">Forgot password?</Link>
+                        </p>
                     </form>
 
                     <div className="flex items-center gap-3">

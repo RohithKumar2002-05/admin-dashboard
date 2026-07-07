@@ -126,3 +126,13 @@ export const deleteSettingsUserApi = (adminId: string) =>
     call(`/api/settings/users/${adminId}`, { method: 'DELETE' });
 export const updateSettingsUserRoleApi = (adminId: string, role_name: string) =>
     call(`/api/settings/users/${adminId}/role`, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ role_name }) });
+
+// Password Reset
+export const adminResetRequestOtpApi = (email: string) =>
+    call('/api/password-reset/request-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email }) });
+
+export const adminResetVerifyOtpApi = (email: string, otp: string) =>
+    call('/api/password-reset/verify-otp', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, otp }) });
+
+export const adminResetPasswordApi = (email: string, new_password: string) =>
+    call('/api/password-reset/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, new_password }) });

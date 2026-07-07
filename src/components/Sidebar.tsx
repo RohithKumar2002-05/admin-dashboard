@@ -5,10 +5,10 @@ import { usePathname, useRouter } from 'next/navigation';
 import { logoutApi } from '@/lib/api';
 import {
     MdDashboard, MdCategory, MdHub, MdSettings,
-    MdLogout, MdPerson, MdVisibility, MdPeople,
+    MdLogout, MdPerson, MdVisibility, MdPeople, MdLock,
 } from 'react-icons/md';
 
-const navItems = [
+const baseNavItems = [
     { href: '/overview',   label: 'Dashboard',  icon: MdDashboard },
     { href: '/categories', label: 'Categories', icon: MdCategory },
     { href: '/hubs',       label: 'Hubs',       icon: MdHub },
@@ -18,12 +18,18 @@ const navItems = [
 
 interface SidebarProps {
     adminName: string;
+    adminRole?: string;
     isGuest?: boolean;
 }
 
-export default function Sidebar({ adminName, isGuest = false }: SidebarProps) {
+export default function Sidebar({ adminName, adminRole, isGuest = false }: SidebarProps) {
     const pathname = usePathname();
     const router   = useRouter();
+
+    const navItems = [
+        ...baseNavItems,
+        ...(adminRole === 'SUPER_ADMIN' ? [{ href: '/reset-password', label: 'Reset Password', icon: MdLock }] : []),
+    ];
 
     const handleLogout = async () => {
         if (isGuest) {
