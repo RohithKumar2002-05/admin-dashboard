@@ -116,12 +116,12 @@ export default async function HubsPage() {
                                     {/* Address badge */}
                                     <td className="px-5 py-4 text-center">
                                         <span className={`inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium ${
-                                            hub.address
+                                            hub.hub_location
                                                 ? 'bg-[#dcfce7] text-[#166534] border border-[#bbf7d0]'
                                                 : 'bg-gray-100 text-gray-400'
                                         }`}>
-                                            {hub.address && <MdCheckCircle className="text-[#166534]" />}
-                                            {hub.address ? 'Address set' : 'No address'}
+                                            {hub.hub_location && <MdCheckCircle className="text-[#166534]" />}
+                                            {hub.hub_location ? 'Address set' : 'No address'}
                                         </span>
                                     </td>
 
