@@ -44,9 +44,9 @@ export default async function DashboardLayout({ children }: { children: React.Re
     }
 
     return (
-        <div className="flex min-h-screen bg-[#f4f6f4]">
+        <div className="flex min-h-screen bg-[#f4f6f4] lg:flex-row flex-col">
             <Sidebar adminName={admin.name} adminRole={admin.role} isGuest={isGuest} />
-            <main className="flex-1 min-w-0 overflow-y-auto bg-[#f4f6f4]">
+            <main className="flex-1 min-w-0 overflow-y-auto bg-[#f4f6f4] pt-14 lg:pt-0">
                 {/* Guest banner */}
                 {isGuest && (
                     <div className="flex items-center justify-between px-6 py-2.5 bg-amber-50 border-b border-amber-200">

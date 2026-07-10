@@ -1,11 +1,14 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { logoutApi } from '@/lib/api';
 import {
     MdDashboard, MdCategory, MdHub, MdSettings,
     MdLogout, MdPerson, MdVisibility, MdPeople, MdLock,
+    MdMenu, MdClose,
 } from 'react-icons/md';
 
 const baseNavItems = [
@@ -25,6 +28,7 @@ interface SidebarProps {
 export default function Sidebar({ adminName, adminRole, isGuest = false }: SidebarProps) {
     const pathname = usePathname();
     const router   = useRouter();
+    const [open, setOpen] = useState(false);
 
     const navItems = [
         ...baseNavItems,
@@ -40,14 +44,11 @@ export default function Sidebar({ adminName, adminRole, isGuest = false }: Sideb
         router.push('/login');
     };
 
-    return (
-        <aside className="w-60 shrink-0 bg-[#1a2e1a] flex flex-col h-screen sticky top-0">
+    const NavContent = ({ onNav }: { onNav?: () => void }) => (
+        <>
             {/* Brand */}
             <div className="flex items-center gap-3 px-6 py-6">
-                <div className="w-9 h-9 rounded-xl bg-[#2d5a2d] flex items-center justify-center shrink-0">
-                    <MdDashboard className="text-[#4ade80] text-xl" />
-                </div>
-                <span className="text-white font-bold text-lg tracking-tight">AdminPanel</span>
+                <Image src="/logo.png" alt="Logo" width={110} height={32} className="object-contain" priority />
             </div>
 
             {/* Section label */}
@@ -61,6 +62,7 @@ export default function Sidebar({ adminName, adminRole, isGuest = false }: Sideb
                         <Link
                             key={href}
                             href={href}
+                            onClick={onNav}
                             className={`flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all
                                 ${active
                                     ? 'bg-[#2d5a2d] text-white'
@@ -72,18 +74,6 @@ export default function Sidebar({ adminName, adminRole, isGuest = false }: Sideb
                         </Link>
                     );
                 })}
-            </nav>
-
-            {/* General section */}
-            <p className="px-6 text-[10px] font-semibold uppercase tracking-widest text-[#4a7a4a] mt-6 mb-2">General</p>
-            <nav className="flex flex-col gap-1 px-3">
-                <Link
-                    href="/settings"
-                    className="flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium text-[#8aab8a] hover:bg-[#243824] hover:text-white transition-all"
-                >
-                    <MdSettings className="text-lg shrink-0" />
-                    Settings
-                </Link>
             </nav>
 
             <div className="flex-1" />
@@ -110,6 +100,40 @@ export default function Sidebar({ adminName, adminRole, isGuest = false }: Sideb
                     {isGuest ? 'Exit Guest' : 'Logout'}
                 </button>
             </div>
-        </aside>
+        </>
+    );
+
+    return (
+        <>
+            {/* Desktop sidebar */}
+            <aside className="hidden lg:flex w-60 shrink-0 bg-[#1a2e1a] flex-col h-screen sticky top-0">
+                <NavContent />
+            </aside>
+
+            {/* Mobile top bar */}
+            <div className="lg:hidden fixed top-0 left-0 right-0 h-14 bg-[#1a2e1a] flex items-center justify-between px-4 z-40 border-b border-[#2d5a2d]">
+                <Image src="/logo.png" alt="Logo" width={90} height={26} className="object-contain" priority />
+                <button
+                    onClick={() => setOpen(v => !v)}
+                    className="text-white p-2 rounded-xl hover:bg-[#2d5a2d] transition-colors"
+                    aria-label="Toggle menu"
+                >
+                    {open ? <MdClose className="text-2xl" /> : <MdMenu className="text-2xl" />}
+                </button>
+            </div>
+
+            {/* Mobile overlay */}
+            {open && (
+                <div
+                    className="lg:hidden fixed inset-0 bg-black/50 z-40"
+                    onClick={() => setOpen(false)}
+                />
+            )}
+
+            {/* Mobile drawer */}
+            <aside className={`lg:hidden fixed top-0 left-0 h-screen w-64 bg-[#1a2e1a] flex flex-col z-50 transition-transform duration-250 ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+                <NavContent onNav={() => setOpen(false)} />
+            </aside>
+        </>
     );
 }
