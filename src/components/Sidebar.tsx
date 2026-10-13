@@ -48,7 +48,7 @@ export default function Sidebar({ adminName, adminRole, isGuest = false }: Sideb
         <>
             {/* Brand */}
             <div className="flex items-center gap-3 px-6 py-6">
-                <Image src="/logo.png" alt="Logo" width={110} height={32} className="object-contain" priority />
+                <Image src="/logo.png" alt="Logo" width={32} height={32} className="object-contain" priority />
             </div>
 
             {/* Section label */}
